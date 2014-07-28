@@ -12,17 +12,17 @@ import Graphics.UI.GLFW as G ( Key(..)
 import Control.Monad         (foldM)
 
 processKeys :: Window
-               -> Set Key
-               -> IO (Set Key)
+            -> Set Key
+            -> IO (Set Key)
 processKeys window keys = foldM (updateKeys window) keys focusedKeys
 
 focusedKeys :: [Key]
 focusedKeys = [Key'Escape, Key'Left, Key'Right, Key'X]
 
 updateKeys :: Window
-              -> Set Key
-              -> Key
-              -> IO (Set Key)
+           -> Set Key
+           -> Key
+           -> IO (Set Key)
 updateKeys window keys key = do
   key_state <- getKey window key
   case key_state of

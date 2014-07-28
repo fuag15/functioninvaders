@@ -5,17 +5,17 @@ import NFInvaders.Data.Engine.Bounded as B (Bounded(..))
 
 class B.Bounded a => Collidable a where
   fixedPositionPathCollision :: B.Bounded b
-                                => a
-                                -> b
-                                -> Path
-                                -> Bool
+                             => a
+                             -> b
+                             -> Path
+                             -> Bool
   fixedPositionPathCollision = defaultFixedPositionPathCollision
 
 defaultFixedPositionPathCollision :: (B.Bounded a, B.Bounded b)
-                                     => a
-                                     -> b
-                                     -> Path
-                                     -> Bool
+                                  => a
+                                  -> b
+                                  -> Path
+                                  -> Bool
 defaultFixedPositionPathCollision object collider collider_path =
   case collider_path of
     Only          _                    -> B.boundCheck object collider

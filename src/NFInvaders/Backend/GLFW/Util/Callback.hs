@@ -16,9 +16,9 @@ error :: ErrorCallback
 error _ = hPutStrLn stderr
 
 framebufferResize :: Window
-                     -> Int
-                     -> Int
-                     -> IO ()
+                  -> Int
+                  -> Int
+                  -> IO ()
 framebufferResize _ width height = do
   viewport   $= viewportConfig width height
   matrixMode $= Projection

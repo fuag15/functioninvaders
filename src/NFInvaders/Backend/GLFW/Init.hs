@@ -19,7 +19,7 @@ import NFInvaders.Data.Simulation.GameWire         (GameWire)
 import Control.Wire.Session                        (clockSession)
 
 runGame :: GameWire
-           -> IO ()
+        -> IO ()
 runGame game_wire = do
   setErrorCallback $ Just CB.error
   successful_init <- G.init

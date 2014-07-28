@@ -40,8 +40,8 @@ worldPosition :: World -> Point
 worldPosition world = V2 (world^.width / 2) (world^.height / 2)
 
 worldPointCheck :: World
-                   -> Point
-                   -> (Bool, (Distance, LineSegment))
+                -> Point
+                -> (Bool, (Distance, LineSegment))
 worldPointCheck world point = (in_world, (distance', distance_segment))
   where
     in_world         = boundingBoxPoint (V2 0 0) (V2 (world^.width) (world^.height)) point

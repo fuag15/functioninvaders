@@ -41,23 +41,23 @@ class Bounded a where
   boundCheck = defaultBoundCheck
 
   positionedBoundCheck :: a
-                          -> (Bounds, Offset)
-                          -> LineSegment
-                          -> Bool
+                       -> (Bounds, Offset)
+                       -> LineSegment
+                       -> Bool
   positionedBoundCheck = defaultPositionedBoundCheck
 
 
 defaultRadius :: Bounded a
-                 => a
-                 -> Double
+              => a
+              -> Double
 defaultRadius object = distanceA (V2 0 0) offset
   where
     (_, offset) = bounds object
 
 defaultPointCheck :: Bounded a
-                     => a
-                     -> Point
-                     -> (Bool, (Distance, LineSegment))
+                  => a
+                  -> Point
+                  -> (Bool, (Distance, LineSegment))
 defaultPointCheck object point = (in_bounds, (distance', distance_segment))
   where
     in_bounds        = boundedBy (bounds object) position' point
@@ -77,9 +77,9 @@ defaultLineSegmentCheck object (start, end) = (in_bounds, (distance', distance_s
 
 
 defaultBoundCheck :: (Bounded a, Bounded b)
-                     => a
-                     -> b
-                     -> Bool
+                  => a
+                  -> b
+                  -> Bool
 defaultBoundCheck object object' =
   case pointCheck object position' of
       (True , _)                    -> True
@@ -93,10 +93,10 @@ defaultBoundCheck object object' =
     detailed_check = positionedBoundCheck object (bounds object')
 
 defaultPositionedBoundCheck :: Bounded a
-                             => a
-                             -> (Bounds, Offset)
-                             -> LineSegment
-                             -> Bool
+                            => a
+                            -> (Bounds, Offset)
+                            -> LineSegment
+                            -> Bool
 defaultPositionedBoundCheck object (bounds', offset') (_, hit_position') =
    case bounds' of
      Only   point'        -> hit_position' == point'

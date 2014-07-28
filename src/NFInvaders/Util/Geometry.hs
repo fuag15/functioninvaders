@@ -15,8 +15,8 @@ import Data.Tuple                    (swap)
 import Data.Ord                      (comparing)
 
 intersects :: LineSegment
-              -> LineSegment
-              -> Bool
+           -> LineSegment
+           -> Bool
 intersects (V2 x1 y1, V2 x2 y2) (V2 x3 y3, V2 x4 y4)
   | all (== 0) [denom, numer_a, numer_b]                   = True  -- Coincident
   | denom == 0                                             = False -- Parallel
@@ -28,8 +28,8 @@ intersects (V2 x1 y1, V2 x2 y2) (V2 x3 y3, V2 x4 y4)
     numer_b = (x2 - x1)*(y1 - y3) - (y2 - y1)*(x1 - x3)
 
 minimalPathLineSegmentLineSegment :: LineSegment
-                                     -> LineSegment
-                                     -> (Distance, LineSegment)
+                                  -> LineSegment
+                                  -> (Distance, LineSegment)
 minimalPathLineSegmentLineSegment line@(start, end) line'@(start', end')
    | path `elem` first_biased = (distance, path)
    | otherwise                = (distance, swap path)
@@ -40,8 +40,8 @@ minimalPathLineSegmentLineSegment line@(start, end) line'@(start', end')
      second_biased     = [ minimalPathLineSegmentPoint line' point | point <- [start , end ] ]
 
 minimalPathLineSegmentPoint :: LineSegment
-                               -> Point
-                               -> LineSegment
+                            -> Point
+                            -> LineSegment
 minimalPathLineSegmentPoint line@(start, end) point =
   case linearProjection line point of
     Just (BeforeStart, _         ) -> (start     , point)
@@ -50,16 +50,16 @@ minimalPathLineSegmentPoint line@(start, end) point =
     _                              -> (start     , point)
 
 projectLineSegmentPoint :: LineSegment
-                           -> Point
-                           -> Maybe Point
+                        -> Point
+                        -> Maybe Point
 projectLineSegmentPoint line point =
   case linearProjection line point of
     Just (_, projection) -> Just projection
     _                    -> Nothing
 
 linearProjection :: LineSegment
-                    -> Point
-                    -> Maybe (SegmentProjectionResult, Point)
+                 -> Point
+                 -> Maybe (SegmentProjectionResult, Point)
 linearProjection (start@(V2 sx sy), end@(V2 ex ey)) point@(V2 px py)
   | denom == 0 && start == point = Just (OnSegment, point)
   | denom == 0                   = Nothing

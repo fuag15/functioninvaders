@@ -14,9 +14,9 @@ import NFInvaders.Util.Geometry            (linearProjection)
 import Data.Maybe                          (isJust)
 
 boundedBy :: (Bounds, Offset)
-             -> Point
-             -> Point
-             -> Bool
+          -> Point
+          -> Point
+          -> Bool
 boundedBy (bounds, offset) origin point@(V2 px _) =
   case bounds of
     Only   point'        -> point == point'

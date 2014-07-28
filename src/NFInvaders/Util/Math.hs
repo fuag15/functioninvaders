@@ -4,9 +4,9 @@ import Control.Arrow ((***))
 import Control.Monad (join)
 
 inBounds :: Double
-            -> Double
-            -> Double
-            -> Bool
+         -> Double
+         -> Double
+         -> Bool
 inBounds bound' bound'' x = x <= max' && x >= min'
   where
     max' = max bound' bound''

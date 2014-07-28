@@ -19,10 +19,10 @@ import Control.Wire.Session                     (stepSession)
 import Data.Functor.Identity                    (runIdentity)
 
 mainLoop :: G.Window
-            -> Set Key
-            -> GameWire
-            -> GameSession
-            -> IO ()
+         -> Set Key
+         -> GameWire
+         -> GameSession
+         -> IO ()
 mainLoop window keys game_wire session = do
   keys' <- processKeys window keys
   M.unless (member G.Key'Escape keys') $ do
