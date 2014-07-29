@@ -1,3 +1,4 @@
+-- | Continous time simulation of a game returns a snapshot to be rendered each delta
 module NFInvaders.Simulation.Game where
 
 import Control.Wire.Core                         (mkSF)

@@ -1,3 +1,4 @@
+-- | Main render loop for the GLFW backend
 module NFInvaders.Backend.GLFW.Loop where
 
 import Graphics.Rendering.OpenGL                ( ClearBuffer(ColorBuffer)
@@ -18,10 +19,10 @@ import Control.Wire.Core                        (stepWire)
 import Control.Wire.Session                     (stepSession)
 import Data.Functor.Identity                    (runIdentity)
 
-mainLoop :: G.Window
-         -> Set Key
-         -> GameWire
-         -> GameSession
+mainLoop :: G.Window     -- ^ Handle to window where our framebuffer lives
+         -> Set Key      -- ^ Set of currently pressed keys
+         -> GameWire     -- ^ Game Simulation Wire, takes time deltas, outputs frames
+         -> GameSession  -- ^ Type of clock that generates timedeltas for the GameWire
          -> IO ()
 mainLoop window keys game_wire session = do
   keys' <- processKeys window keys

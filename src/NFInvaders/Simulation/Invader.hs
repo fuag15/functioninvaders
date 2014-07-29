@@ -1,3 +1,4 @@
+-- | Invader simulation returns a sanpshot of the invader each delta
 module NFInvaders.Simulation.Invader where
 
 import Control.Wire.Core                      (mkSF)

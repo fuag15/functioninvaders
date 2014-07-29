@@ -1,14 +1,16 @@
 {-# LANGUAGE TemplateHaskell #-}
+
+-- | Actor in the world representing a player
 module NFInvaders.Data.Actor.BraveDefender ( BraveDefender(..)
                                            , position
-                                           , health )
+                                           , health            )
 where
 
 import Control.Lens                                  ( makeLenses
-                                                     , (^.) )
+                                                     , (^.)       )
 
 import NFInvaders.Data.Engine.Bounds                 ( Bounds(..)
-                                                     , Offset )
+                                                     , Offset     )
 
 import Graphics.Rendering.OpenGL                     ( PrimitiveMode(TriangleStrip)
                                                      , Color3(..)
@@ -19,21 +21,25 @@ import Graphics.Rendering.OpenGL                     ( PrimitiveMode(TriangleStr
                                                      , vertex
                                                      , translate
                                                      , preservingMatrix
-                                                     , renderPrimitive )
+                                                     , renderPrimitive              )
 
 import Linear.V2                                     (V2(..))
 import NFInvaders.Data.Engine.Renderable             (Renderable(..))
 import qualified NFInvaders.Data.Engine.Bounded as B (Bounded(..))
 import NFInvaders.Data.Engine.Collidable             (Collidable(..))
 
+-- | All statefull information needed to represent a player
 data BraveDefender = BraveDefender { _position :: V2 Double
                                    , _health   :: Integer }
 
+-- | Usefull lenses for modifying the defender record
 $(makeLenses ''BraveDefender)
 
+-- | Brave defender can be seen
 instance Renderable BraveDefender where
   render = renderBraveDefender
 
+-- | Use old fixed function pipeline to draw a brave defender
 renderBraveDefender :: BraveDefender -> IO ()
 renderBraveDefender defender = preservingMatrix $ do
   let V2 x y = defender^.position - braveDefenderOffset
@@ -49,10 +55,12 @@ renderBraveDefender defender = preservingMatrix $ do
     vertex (Vertex3 7 4 0 :: Vertex3 GLdouble)
     vertex (Vertex3 8 6 0 :: Vertex3 GLdouble)
 
+-- | Our brave defender has bounds
 instance B.Bounded BraveDefender where
   bounds                  = braveDefenderBounds
   position brave_defender = brave_defender^.position
 
+-- | Return Planar representtation of Bounds of a brave Defender
 braveDefenderBounds :: BraveDefender -> (Bounds, Offset)
 braveDefenderBounds _ = (Planar bound_segments, braveDefenderOffset)
   where
@@ -65,7 +73,9 @@ braveDefenderBounds _ = (Planar bound_segments, braveDefenderOffset)
                      , (V2 7 5, V2 8 6)
                      , (V2 8 1, V2 8 6) ]
 
+-- | Offset of bound definitions from center of brave defender
 braveDefenderOffset :: Offset
 braveDefenderOffset = V2 4 3
 
+-- | Our defender can collide with bullets, the world, and invaders
 instance Collidable BraveDefender

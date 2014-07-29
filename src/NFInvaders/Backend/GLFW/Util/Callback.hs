@@ -1,3 +1,4 @@
+-- | Holds utility functions for use with GLFW backend
 module NFInvaders.Backend.GLFW.Util.Callback where
 
 import Graphics.UI.GLFW     as G (ErrorCallback, Window)
@@ -12,12 +13,14 @@ import Graphics.Rendering.OpenGL ( MatrixMode(Modelview, Projection)
                                  , viewport
                                  , ($=) )
 
+-- | Error callback that passes the error description through to stderr
 error :: ErrorCallback
 error _ = hPutStrLn stderr
 
-framebufferResize :: Window
-                  -> Int
-                  -> Int
+-- | Callback to adjust our opengl framebuffer and projection whenver the window is resized
+framebufferResize :: Window -- Window handle that contains framebuffer
+                  -> Int    -- Width of window
+                  -> Int    -- Height of window
                   -> IO ()
 framebufferResize _ width height = do
   viewport   $= viewportConfig width height

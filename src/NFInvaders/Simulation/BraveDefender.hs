@@ -1,3 +1,5 @@
+-- | continous time sim of a defender
+-- returns a snapshot to be rendered
 module NFInvaders.Simulation.BraveDefender where
 
 import Control.Wire.Core                            (mkSF)

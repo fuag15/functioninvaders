@@ -1,3 +1,5 @@
+-- | Continous time simulation of a bullet
+-- reterns a snapshot to be rendered
 module NFInvaders.Simulation.Bullet where
 
 import Control.Wire.Core                          (mkSF)

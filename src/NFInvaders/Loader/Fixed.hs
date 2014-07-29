@@ -1,11 +1,12 @@
--- | Basic game state data
+-- | A Fixed loader for use while developing
+-- bootstraps our game state
 module NFInvaders.Loader.Fixed where
 
 import NFInvaders.Data.Game                as G  ( Game(..)
                                                  , invaders
                                                  , invaderBullets
                                                  , braveDefenderBullets
-                                                 , braveDefender )
+                                                 , braveDefender        )
 
 import Linear.V2                                 (V2(..))
 import Control.Lens                              ((^.))
@@ -16,9 +17,11 @@ import NFInvaders.Simulation.Invader             (invaderWire)
 import NFInvaders.Simulation.Bullet              (bulletWire)
 import NFInvaders.Simulation.BraveDefender       (braveDefenderWire)
 
+-- | Returns a fixed initial state for the game
 initialState :: GameState
 initialState = makeGameState initialFrame
 
+-- | Takes a game frame and turns it into a state simulation
 makeGameState :: Game -> GameState
 makeGameState frame =
   GameState { GS._invaders             = invader_wires
@@ -31,6 +34,7 @@ makeGameState frame =
     brave_defender_bullet_wires = fmap bulletWire   $ frame^.braveDefenderBullets
     brave_defender_wire         = braveDefenderWire $ frame^.braveDefender
 
+-- | Fixed loader for development
 initialFrame :: Game
 initialFrame = Game { G._invaders             = [ Invader { I._position = V2 25.0 75.0
                                                           , I._health   = 1 }

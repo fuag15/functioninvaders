@@ -1,4 +1,10 @@
--- | Simple space invaders using netwire and sdl
+{-|
+  A netwire GLFW implimentation of space invaders
+
+  this is a work in progress
+
+  if you want to poke around I try to keep things well documented
+-}
 module Main where
 
 import NFInvaders.Backend.GLFW.Init (runGame)

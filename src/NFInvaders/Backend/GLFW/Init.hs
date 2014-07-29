@@ -1,3 +1,4 @@
+-- | Initialization boilerpplate for GLFW
 module NFInvaders.Backend.GLFW.Init where
 
 import NFInvaders.Backend.GLFW.Util.Callback as CB (error, framebufferResize)
@@ -18,7 +19,8 @@ import Graphics.UI.GLFW                      as G  ( init
 import NFInvaders.Data.Simulation.GameWire         (GameWire)
 import Control.Wire.Session                        (clockSession)
 
-runGame :: GameWire
+-- | Takes a GameWire (Game Simulation) and initializes GLFW context to run it in
+runGame :: GameWire -- ^ Simulation of game in wire form, returns a frame each simstep
         -> IO ()
 runGame game_wire = do
   setErrorCallback $ Just CB.error
