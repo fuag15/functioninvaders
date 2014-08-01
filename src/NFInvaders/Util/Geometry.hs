@@ -63,7 +63,7 @@ intersects :: LineSegment -- ^ first segment
            -> Bool
 intersects (V2 x1 y1, V2 x2 y2) (V2 x3 y3, V2 x4 y4)
   | all (== 0) [determinant, numer_x, numer_y]                   = True  -- Coincident
-  | denom == 0                                                   = False -- Parallel
+  | determinant == 0                                             = False -- Parallel
   | all (inBounds 0 1) $ fmap (/ determinant) [numer_x, numer_y] = True  -- Intersect
   | otherwise                                                    = False
   where
