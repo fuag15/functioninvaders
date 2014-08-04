@@ -18,7 +18,7 @@ import NFInvaders.Data.Math.Geometry                     ( Vector
 import NFInvaders.Data.Actor.BraveDefender               ( BraveDefender(..)
                                                          , position          )
 
-import Control.Lens                                      ((+=))
+import Control.Lens                                      ((^.))
 import FRP.Netwire.Move                                  (integral)
 import Control.Wire.Session                              (HasTime)
 import NFInvaders.Data.Simulation.BraveDefenderWire      (BraveDefenderWire)
@@ -29,12 +29,24 @@ import Prelude                                    hiding ((.))
 import Control.Arrow                                     (returnA)
 
 -- | takes an initial brave defender and returns that defender with modified position
-braveDefenderWire :: (HasTime t s, Monad m, Monoid e)
-                  => BraveDefender
-                  -> Wire s e m (Set G.Key) BraveDefender
+-- Once all is well and done this should be replaced with a StateT and += from Control.Lens
+-- for efficiency if needed
+braveDefenderWire :: BraveDefender     -- ^ initial state of the brave defender
+                  -> BraveDefenderWire -- ^ wire type that generates a snapshot of a defender
 braveDefenderWire defender = proc keysDown -> do
-  velocity <- braveDefenderVelocity -< keysDown
-  returnA                           -< defender.position += velocity
+  position' <- braveDefenderPosition (defender^.position) -< keysDown
+  returnA                                                 -< BraveDefender { _position = position'
+                                                                           , _health   = 10 }
+
+-- | Represents a brave defenders position
+braveDefenderPosition :: (HasTime t s, Monad m, Monoid e)
+                      => Point                        -- ^ initial position
+                      -> Wire s e m (Set G.Key) Point -- ^ wire that iterates position
+braveDefenderPosition initial_position = proc keysDown -> do
+  velocity  <- braveDefenderVelocity     -< keysDown
+  position' <- integral initial_position -< velocity
+  returnA                                -< position'
+
 
 -- | Helper wire to determine velocity based on key presses
 braveDefenderVelocity :: (Monad m, Monoid e)
@@ -47,13 +59,13 @@ braveDefenderVelocity = proc keysDown -> do
 -- | Helper wire to determine horizontal velocity based on key presses
 braveDefenderHorizontalVelocity :: (Monad m, Monoid e)
                                 => Wire s e m (Set G.Key) Double
-braveDefenderHorizontalVelocity =  (-2) . when (member G.Key'Left )
-                               <|> 2    . when (member G.Key'Right)
+braveDefenderHorizontalVelocity =  (-20) . when (member G.Key'Left)
+                               <|> 20    . when (member G.Key'Right)
                                <|> 0
 
 -- | Helper wire to determine vertical velocity based on key presses
 braveDefenderVerticalVelocity :: (Monad m, Monoid e)
                               => Wire s e m (Set G.Key) Double
-braveDefenderVerticalVelocity =  2    . when (member G.Key'Up)
-                             <|> (-2) . when (member G.Key'Down)
+braveDefenderVerticalVelocity =  20    . when (member G.Key'Up)
+                             <|> (-20) . when (member G.Key'Down)
                              <|> 0

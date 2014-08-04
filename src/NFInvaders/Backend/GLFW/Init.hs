@@ -17,7 +17,7 @@ import Graphics.UI.GLFW                      as G  ( init
                                                    , terminate )
 
 import NFInvaders.Data.Simulation.GameWire         (GameWire)
-import Control.Wire.Session                        (clockSession)
+import Control.Wire.Session                        (clockSession_)
 
 -- | Takes a GameWire (Game Simulation) and initializes GLFW context to run it in
 runGame :: GameWire -- ^ Simulation of game in wire form, returns a frame each simstep
@@ -33,7 +33,7 @@ runGame game_wire = do
       makeContextCurrent window_handle
       swapInterval 1
       setFramebufferSizeCallback window $ Just CB.framebufferResize
-      mainLoop window empty game_wire clockSession
+      mainLoop window empty game_wire clockSession_
       destroyWindow window
       terminate
       exitSuccess

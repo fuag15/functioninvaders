@@ -17,4 +17,4 @@ import Data.Functor.Identity             (Identity)
 -- a monad transformer of Identint ( no monad transformers are used )
 -- And it takes a set of keys and returns a Bullet
 -- (doesn't need to take keys (change this))
-type BulletWire = Wire (() -> Timed NominalDiffTime ()) () Identity (Set Key) Bullet
+type BulletWire = Wire (Timed NominalDiffTime ()) () Identity (Set Key) Bullet
