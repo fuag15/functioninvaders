@@ -27,7 +27,7 @@ import Prelude                                    hiding ((.))
 import Control.Arrow                                     (returnA)
 
 -- | takes an initial brave defender and returns that defender with modified position
--- Once all is well and done this should be replaced with a StateT and += from Control.Lens
+-- Once all is well and done this should be replaced with a State and += from Control.Lens
 -- for efficiency if needed
 braveDefenderWire :: BraveDefender     -- ^ initial state of the brave defender
                   -> BraveDefenderWire -- ^ wire type that generates a snapshot of a defender
