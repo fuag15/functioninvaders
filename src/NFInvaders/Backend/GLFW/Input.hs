@@ -23,7 +23,12 @@ processKeys window keys = foldM (updateKeys window) keys focusedKeys
 
 -- | Utility function that defines keys that we care about
 focusedKeys :: [Key]
-focusedKeys = [Key'Escape, Key'Left, Key'Right, Key'X, Key'Up, Key'Down]
+focusedKeys = [ Key'Left     -- ^ Move left
+              , Key'Right    -- ^ Move Right
+              , Key'Up       -- ^ Move Up
+              , Key'Down     -- ^ Move Down
+              , Key'X        -- ^ Shoot a bullet
+              , Key'Escape ] -- ^ Exit the game
 
 -- | Takes a new state of a key we care about and updates the set of pressed keys to reflect that state
 updateKeys :: Window       -- ^ Handle for window containing GLFW context we want keypresses from
