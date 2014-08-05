@@ -42,11 +42,8 @@ braveDefenderWire defender = proc keysDown -> do
 braveDefenderPosition :: (HasTime t s, Monad m, Monoid e)
                       => Point                        -- ^ initial position
                       -> Wire s e m (Set G.Key) Point -- ^ wire that iterates position
-braveDefenderPosition initial_position = proc keysDown -> do
-  velocity  <- braveDefenderVelocity     -< keysDown
-  position' <- integral initial_position -< velocity
-  returnA                                -< position'
-
+braveDefenderPosition initial_position =
+  integral initial_position . braveDefenderVelocity
 
 -- | Helper wire to determine velocity based on key presses
 braveDefenderVelocity :: (Monad m, Monoid e)

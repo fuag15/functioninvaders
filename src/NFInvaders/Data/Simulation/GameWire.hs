@@ -20,4 +20,4 @@ type GameSession = Session IO (Timed NominalDiffTime ())
 -- An inhibition value of ()
 -- a monad transformer of Identint ( no monad transformers are used )
 -- And it takes a set of keys and returns a Game
-type GameWire = Wire (Timed NominalDiffTime ()) () Identity (Set Key) Game
+type GameWire = Wire (Timed NominalDiffTime ()) () Identity (Set G.Key) Game
