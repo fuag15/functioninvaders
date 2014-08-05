@@ -4,8 +4,7 @@
 -- returns a snapshot to be rendered
 module NFInvaders.Simulation.BraveDefender where
 
-import FRP.Netwire                                       ( Wire
-                                                         , when
+import FRP.Netwire                                       ( when
                                                          , (<|>)
                                                          , (.)   )
 
@@ -20,10 +19,9 @@ import NFInvaders.Data.Actor.BraveDefender               ( BraveDefender(..)
 
 import Control.Lens                                      ((^.))
 import FRP.Netwire.Move                                  (integral)
-import Control.Wire.Session                              (HasTime)
 import NFInvaders.Data.Simulation.BraveDefenderWire      (BraveDefenderWire)
+import NFInvaders.Data.Simulation.GameWire               (SimulationWire)
 import Graphics.UI.GLFW                             as G (Key(..))
-import Data.Monoid                                       (Monoid)
 import Linear.V2                                         (V2(..))
 import Prelude                                    hiding ((.))
 import Control.Arrow                                     (returnA)
@@ -39,30 +37,26 @@ braveDefenderWire defender = proc keysDown -> do
                                                                            , _health   = 10 }
 
 -- | Represents a brave defenders position
-braveDefenderPosition :: (HasTime t s, Monad m, Monoid e)
-                      => Point                        -- ^ initial position
-                      -> Wire s e m (Set G.Key) Point -- ^ wire that iterates position
+braveDefenderPosition :: Point                            -- ^ initial position
+                      -> SimulationWire (Set G.Key) Point -- ^ wire that iterates position
 braveDefenderPosition initial_position =
   integral initial_position . braveDefenderVelocity
 
 -- | Helper wire to determine velocity based on key presses
-braveDefenderVelocity :: (Monad m, Monoid e)
-                      => Wire s e m (Set G.Key) Vector
+braveDefenderVelocity :: SimulationWire (Set G.Key) Vector
 braveDefenderVelocity = proc keysDown -> do
   horizontal_offset <- braveDefenderHorizontalVelocity -< keysDown
   vertical_offset   <- braveDefenderVerticalVelocity   -< keysDown
   returnA                                              -< V2 horizontal_offset vertical_offset
 
 -- | Helper wire to determine horizontal velocity based on key presses
-braveDefenderHorizontalVelocity :: (Monad m, Monoid e)
-                                => Wire s e m (Set G.Key) Double
+braveDefenderHorizontalVelocity :: SimulationWire (Set G.Key) Double
 braveDefenderHorizontalVelocity =  (-20) . when (member G.Key'Left)
                                <|> 20    . when (member G.Key'Right)
                                <|> 0
 
 -- | Helper wire to determine vertical velocity based on key presses
-braveDefenderVerticalVelocity :: (Monad m, Monoid e)
-                              => Wire s e m (Set G.Key) Double
+braveDefenderVerticalVelocity :: SimulationWire (Set G.Key) Double
 braveDefenderVerticalVelocity =  20    . when (member G.Key'Up)
                              <|> (-20) . when (member G.Key'Down)
                              <|> 0
