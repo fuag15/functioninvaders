@@ -34,7 +34,7 @@ braveDefenderWire :: BraveDefender     -- ^ initial state of the brave defender
 braveDefenderWire defender = proc keysDown -> do
   position' <- braveDefenderPosition (defender^.position) -< keysDown
   returnA                                                 -< BraveDefender { _position = position'
-                                                                           , _health   = 10 }
+                                                                           , _health   = 10       }
 
 -- | Represents a brave defenders position
 braveDefenderPosition :: Point                            -- ^ initial position

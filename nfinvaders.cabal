@@ -62,7 +62,7 @@ executable nfinvaders
     transformers,
     OpenGL,
     lens,
-    aeson >= 0.7.0.6,
+    aeson,
     netwire
 
 -- You can disable the hlint test suite with -f-test-hlint
@@ -99,7 +99,7 @@ test-suite quickcheck
       time,
       transformers,
       lens,
-      aeson >= 0.7.0.6,
+      aeson,
       QuickCheck,
       test-framework,
       test-framework-quickcheck2,
@@ -126,7 +126,7 @@ test-suite hunit
       time,
       transformers,
       lens,
-      aeson >= 0.7.0.6,
+      aeson,
       HUnit,
       test-framework,
       test-framework-hunit,
