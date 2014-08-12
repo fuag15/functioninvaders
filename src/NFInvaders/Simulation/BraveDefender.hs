@@ -32,9 +32,9 @@ import Control.Arrow                                     (returnA)
 braveDefenderWire :: BraveDefender     -- ^ initial state of the brave defender
                   -> BraveDefenderWire -- ^ wire type that generates a snapshot of a defender
 braveDefenderWire defender = proc keysDown -> do
-  position' <- braveDefenderPosition (defender^.position) -< keysDown
-  returnA                                                 -< BraveDefender { _position = position'
-                                                                           , _health   = 10       }
+  position' <- braveDefenderPosition (defender ^. position) -< keysDown
+  returnA -< BraveDefender { _position = position'
+                           , _health   = 10       }
 
 -- | Represents a brave defenders position
 braveDefenderPosition :: Point                            -- ^ initial position
@@ -47,7 +47,7 @@ braveDefenderVelocity :: SimulationWire (Set G.Key) Vector
 braveDefenderVelocity = proc keysDown -> do
   horizontal_offset <- braveDefenderHorizontalVelocity -< keysDown
   vertical_offset   <- braveDefenderVerticalVelocity   -< keysDown
-  returnA                                              -< V2 horizontal_offset vertical_offset
+  returnA -< V2 horizontal_offset vertical_offset
 
 -- | Helper wire to determine horizontal velocity based on key presses
 braveDefenderHorizontalVelocity :: SimulationWire (Set G.Key) Double

@@ -15,6 +15,7 @@
   NFInvaders.Loader          -- ^ Things to load game state
   NFInvaders.Simulation      -- ^ Wire definitions for the game simulation
   NFInvaders.Util            -- ^ various utility functions
+  NFInvaders.Util.Simulation -- ^ various utility functions for dealing with collections of Simulations (list of bullets / invaders)
   NFINvaders.Data.Actor      -- ^ Data definitions of objects in the world
   NFINvaders.Data.Engine     -- ^ Class definitions for world objects
   NFINvaders.Data.Math       -- ^ Some data definitons for math related things

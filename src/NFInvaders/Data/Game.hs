@@ -29,7 +29,7 @@ instance Renderable Game where
 -- | Old Fixed Function Rendering for a game
 renderGame :: Game -> IO ()
 renderGame game = do
-  mapMOf_ (invaders            .traverse) render game
-  mapMOf_ (invaderBullets      .traverse) render game
-  mapMOf_ (braveDefenderBullets.traverse) render game
-  render $ game^.braveDefender
+  mapMOf_ (invaders             . traverse) render game
+  mapMOf_ (invaderBullets       . traverse) render game
+  mapMOf_ (braveDefenderBullets . traverse) render game
+  render $ game ^. braveDefender

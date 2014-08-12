@@ -31,9 +31,9 @@ import Prelude                         hiding ((.))
 invaderWire :: Invader     -- ^ initial stateo of invader
             -> InvaderWire -- ^ wire type that generates a snapshot of an invader each simulation step
 invaderWire invader = proc _ -> do
-  position' <- invaderPosition (invader^.position) -< ()
-  returnA                                          -< Invader { _position = position'
-                                                              , _health   = 10        }
+  position' <- invaderPosition (invader ^. position) -< ()
+  returnA -< Invader { _position = position'
+                     , _health   = 10        }
 
 -- | Represents an invaders position
 invaderPosition :: Point                   -- ^ initial position

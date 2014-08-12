@@ -29,10 +29,10 @@ makeGameState frame =
             , GS._braveDefenderBullets = brave_defender_bullet_wires
             , GS._braveDefender        = brave_defender_wire }
   where
-    invader_wires               = fmap invaderWire  $ frame^.invaders
-    invader_bullet_wires        = fmap bulletWire   $ frame^.invaderBullets
-    brave_defender_bullet_wires = fmap bulletWire   $ frame^.braveDefenderBullets
-    brave_defender_wire         = braveDefenderWire $ frame^.braveDefender
+    invader_wires               = fmap invaderWire  $ frame ^. invaders
+    invader_bullet_wires        = fmap bulletWire   $ frame ^. invaderBullets
+    brave_defender_bullet_wires = fmap bulletWire   $ frame ^. braveDefenderBullets
+    brave_defender_wire         = braveDefenderWire $ frame ^. braveDefender
 
 -- | Fixed loader for development
 initialFrame :: Game

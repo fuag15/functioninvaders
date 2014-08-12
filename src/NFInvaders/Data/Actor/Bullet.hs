@@ -38,7 +38,7 @@ instance Renderable Bullet where
 -- | Uses old fixed function pipe to render a bullet
 renderBullet :: Bullet -> IO ()
 renderBullet bullet = preservingMatrix $ do
-  let V2 x y = bullet^.position
+  let V2 x y = bullet ^. position
   translate (Vector3 (realToFrac x) (realToFrac y) 0 :: Vector3 GLdouble)
   renderPrimitive Points $ do
     color  (Color3  1 1 0 :: Color3 GLdouble)

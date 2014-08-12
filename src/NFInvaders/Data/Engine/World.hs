@@ -40,13 +40,13 @@ worldBounds world = (bounds', offset)
     bounds'        = Planar [width_segment, height_segment]
     width_segment  = (V2 0 0, V2 (world^.width) 0              )
     height_segment = (V2 0 0, V2 0              (world^.height))
-    offset         = V2 (world^.width / 2) $ world^.height / 2
+    offset         = V2 (world ^. width / 2) $ world ^. height / 2
 
 
 -- | The position of the center of the world is stagnant.
 -- its the center of the world
 worldPosition :: World -> Point
-worldPosition world = V2 (world^.width / 2) (world^.height / 2)
+worldPosition world = V2 (world ^. width / 2) (world ^. height / 2)
 
 -- | Point checks for the world are simplified because it is a simple box check
 worldPointCheck :: World
@@ -54,6 +54,6 @@ worldPointCheck :: World
                 -> (Bool, (Distance, LineSegment))
 worldPointCheck world point = (in_world, (distance', distance_segment))
   where
-    in_world         = boundingBoxPoint (V2 0 0) (V2 (world^.width) (world^.height)) point
+    in_world         = boundingBoxPoint (V2 0 0) (V2 (world ^. width) (world ^. height)) point
     distance_segment = (point, worldPosition world)
     distance'        = uncurry distanceA distance_segment
