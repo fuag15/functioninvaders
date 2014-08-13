@@ -149,7 +149,7 @@ linearProjection (start@(V2 sx sy), end@(V2 ex ey)) point@(V2 px py)
   | otherwise                    = Just (segment_check, projection)
   where
     denom         = distanceA start end ** 2
-    numer         = (px - sx)*(ex - sx) + (py - sy)* (ey - sy)
+    numer         = (px - sx)*(ex - sx) + (py - sy)*(ey - sy)
     scale         = numer / denom
     projection    = start + V2 scale scale * (end - start)
     segment_check

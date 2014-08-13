@@ -42,7 +42,7 @@ instance Renderable Invader where
 -- | Olde fixed function pipelin rendering function for Invaders
 renderInvader :: Invader -> IO ()
 renderInvader invader = preservingMatrix $ do
-  let V2 x y = invader^.position - invaderOffset
+  let V2 x y = invader ^. position - invaderOffset
   translate (Vector3 (realToFrac x) (realToFrac y) 0 :: Vector3 GLdouble)
   renderPrimitive TriangleFan $ do
     color  (Color3  1 0 1 :: Color3  GLdouble)

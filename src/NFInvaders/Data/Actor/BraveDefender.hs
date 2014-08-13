@@ -42,7 +42,7 @@ instance Renderable BraveDefender where
 -- | Use old fixed function pipeline to draw a brave defender
 renderBraveDefender :: BraveDefender -> IO ()
 renderBraveDefender defender = preservingMatrix $ do
-  let V2 x y = defender^.position - braveDefenderOffset
+  let V2 x y = defender ^. position - braveDefenderOffset
   translate (Vector3 (realToFrac x) (realToFrac y) 0 :: Vector3 GLdouble)
   renderPrimitive TriangleStrip $ do
     color  (Color3  0 1 1 :: Color3  GLdouble)
