@@ -18,9 +18,10 @@ import NFInvaders.Data.Actor.BraveDefender               ( BraveDefender(..)
                                                          , position          )
 
 import Control.Lens                                      ((^.))
-import FRP.Netwire.Move                                  (integral)
+import FRP.Netwire.Move                                  (integralWith)
 import NFInvaders.Data.Simulation.BraveDefenderWire      (BraveDefenderWire)
 import NFInvaders.Data.Simulation.GameWire               (SimulationWire)
+import NFInvaders.Util.Math                              (clampPointToBox)
 import Graphics.UI.GLFW                             as G (Key(..))
 import Linear.V2                                         (V2(..))
 import Prelude                                    hiding ((.))
@@ -29,24 +30,28 @@ import Control.Arrow                                     (returnA)
 -- | takes an initial brave defender and returns that defender with modified position
 -- Once all is well and done this should be replaced with a State and += from Control.Lens
 -- for efficiency if needed
-braveDefenderWire :: BraveDefender     -- ^ initial state of the brave defender
+braveDefenderWire :: (Point, Point)    -- ^ box to clamp position to
+                  -> BraveDefender     -- ^ initial state of the brave defender
                   -> BraveDefenderWire -- ^ wire type that generates a snapshot of a defender
-braveDefenderWire defender = proc keysDown -> do
-  position' <- braveDefenderPosition (defender ^. position) -< keysDown
-  returnA -< BraveDefender { _position = position'
-                           , _health   = 10       }
+braveDefenderWire range_box defender = proc keys_down -> do
+  position' <- braveDefenderPosition range_box (defender ^. position) -< keys_down
+  returnA                                                             -< BraveDefender { _position = position'
+                                                                                       , _health   = 10       }
 
 -- | Represents a brave defenders position
-braveDefenderPosition :: Point                            -- ^ initial position
+braveDefenderPosition :: (Point, Point)                   -- ^ box to clamp position to
+                      -> Point                            -- ^ initial position
                       -> SimulationWire (Set G.Key) Point -- ^ wire that iterates position
-braveDefenderPosition initial_position =
-  integral initial_position . braveDefenderVelocity
+braveDefenderPosition range_box initial_position = proc keys_down -> do
+  velocity  <- braveDefenderVelocity                         -< keys_down
+  position' <- integralWith clampPointToBox initial_position -< (velocity, range_box)
+  returnA                                                    -< position'
 
 -- | Helper wire to determine velocity based on key presses
 braveDefenderVelocity :: SimulationWire (Set G.Key) Vector
-braveDefenderVelocity = proc keysDown -> do
-  horizontal_offset <- braveDefenderHorizontalVelocity -< keysDown
-  vertical_offset   <- braveDefenderVerticalVelocity   -< keysDown
+braveDefenderVelocity = proc keys_down -> do
+  horizontal_offset <- braveDefenderHorizontalVelocity -< keys_down
+  vertical_offset   <- braveDefenderVerticalVelocity   -< keys_down
   returnA -< V2 horizontal_offset vertical_offset
 
 -- | Helper wire to determine horizontal velocity based on key presses

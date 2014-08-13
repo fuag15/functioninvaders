@@ -12,12 +12,14 @@ import NFInvaders.Data.Actor.Bullet        as B  (Bullet(..))
 import NFInvaders.Data.Actor.Invader       as I  (Invader(..))
 import NFInvaders.Data.Actor.BraveDefender as BD (BraveDefender(..))
 import NFInvaders.Data.Engine.Renderable   as R  (Renderable(render))
+import NFInvaders.Data.Engine.World              (World)
 
 -- | Our game consists of the snapshot of invaders, bullets and defender
 data Game = Game { _invaders             :: [Invader]
                  , _invaderBullets       :: [Bullet]
                  , _braveDefenderBullets :: [Bullet]
-                 , _braveDefender        :: BraveDefender }
+                 , _braveDefender        :: BraveDefender
+                 , _world                :: World         }
 
 -- | accessor / mutatorr lenses for Game
 $(makeLenses ''Game)

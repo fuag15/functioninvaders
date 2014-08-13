@@ -7,7 +7,8 @@ import NFInvaders.Data.GameState                                           ( Gam
                                                                            , braveDefender
                                                                            , invaderBullets
                                                                            , braveDefenderBullets
-                                                                           , invaders )
+                                                                           , invaders
+                                                                           , world )
 
 import NFInvaders.Data.Simulation.GameWire                                 (GameWire)
 import NFInvaders.Util.Simulation.Collection.Statefull.Generated.Filtered  (automatedWireCollection)
@@ -19,12 +20,13 @@ import Control.Lens                                                        ((^.)
 
 -- | Gamewire that only simulates invader movement
 gameWire :: GameState -> GameWire
-gameWire game_state = proc keysDown -> do
-  defender'             <- game_state ^. braveDefender                                              -< keysDown
+gameWire game_state = proc keys_down -> do
+  defender'             <- game_state ^. braveDefender                                              -< keys_down
   invaders'             <- automatedWireCollection invaderWire (game_state ^. invaders            ) -< []
   invaderBullets'       <- automatedWireCollection bulletWire  (game_state ^. invaderBullets      ) -< []
   braveDefenderBullets' <- automatedWireCollection bulletWire  (game_state ^. braveDefenderBullets) -< []
   returnA -< Game { _invaders             = invaders'
                   , _invaderBullets       = invaderBullets'
                   , _braveDefenderBullets = braveDefenderBullets'
-                  , _braveDefender        = defender' }
+                  , _braveDefender        = defender'
+                  , _world                = game_state ^. world }

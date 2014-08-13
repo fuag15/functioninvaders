@@ -1,7 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 -- | Data representation of an orthographic world to simulate the game in
-module NFInvaders.Data.World where
+module NFInvaders.Data.Engine.World where
 
 import NFInvaders.Data.Engine.Bounds       ( Bounds(..)
                                            , Offset )
