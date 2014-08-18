@@ -4,39 +4,75 @@
 -- returns a snapshot to be rendered
 module NFInvaders.Simulation.BraveDefender where
 
-import FRP.Netwire                                       ( when
-                                                         , (<|>)
-                                                         , (.)   )
+import FRP.Netwire                                         ( when
+                                                           , pure
+                                                           , (<|>)
+                                                           , (.) )
 
-import Data.Set                                          ( Set
-                                                         , member )
+import Data.Set                                            ( Set
+                                                           , member )
 
-import NFInvaders.Data.Math.Geometry                     ( Vector
-                                                         , Point )
+import NFInvaders.Data.Math.Geometry                       ( Vector
+                                                           , Point )
 
-import NFInvaders.Data.Actor.BraveDefender               ( BraveDefender(..)
-                                                         , position          )
+import NFInvaders.Data.Actor.BraveDefender          as BD  ( BraveDefender(..)
+                                                           , position          )
 
-import Control.Lens                                      ((^.))
-import FRP.Netwire.Move                                  (integralWith)
-import NFInvaders.Data.Simulation.BraveDefenderWire      (BraveDefenderWire)
-import NFInvaders.Data.Simulation.GameWire               (SimulationWire)
-import NFInvaders.Util.Math                              (clampPointToBox)
-import Graphics.UI.GLFW                             as G (Key(..))
-import Linear.V2                                         (V2(..))
-import Prelude                                    hiding ((.))
-import Control.Arrow                                     (returnA)
+import Control.Wire.Event                                  ( Event
+                                                           , became
+                                                           , once )
+
+import Control.Wire.Interval                               (after)
+import NFInvaders.Data.Actor.Bullet                 as B   (Bullet(..))
+import Control.Lens                                        ((^.))
+import Control.Wire.Switch                                 ((-->))
+import FRP.Netwire.Move                                    (integralWith)
+import NFInvaders.Data.Simulation.BraveDefenderWire        (BraveDefenderWire)
+import NFInvaders.Data.Simulation.GameWire                 (SimulationWire)
+import NFInvaders.Util.Math                                (clampPointToBox)
+import Graphics.UI.GLFW                             as G   (Key(..))
+import Linear.V2                                           (V2(..))
+import Prelude                                      hiding ((.))
+import Control.Arrow                                       (returnA)
 
 -- | takes an initial brave defender and returns that defender with modified position
 -- Once all is well and done this should be replaced with a State and += from Control.Lens
 -- for efficiency if needed
 braveDefenderWire :: (Point, Point)    -- ^ box to clamp position to
                   -> BraveDefender     -- ^ initial state of the brave defender
-                  -> BraveDefenderWire -- ^ wire type that generates a snapshot of a defender
+                  -> BraveDefenderWire -- ^ wire type that generates a snapshot of a defender andany new bullets
 braveDefenderWire range_box defender = proc keys_down -> do
+  defender' <- braveDefenderMove     range_box defender -< keys_down
+  bullets'  <- braveDefenderCannon                      -< (keys_down, defender' ^. position + V2 0.0 0.1)
+  returnA                                               -< (defender', bullets')
+
+-- | Moves the BraveDefender and returns a new Defender
+braveDefenderMove :: (Point, Point)                           -- ^ box to clamp position to
+                  -> BraveDefender                            -- ^ initial state of brave defender
+                  -> SimulationWire (Set G.Key) BraveDefender -- ^ wire that generates a snapshot of the brave defender
+braveDefenderMove range_box defender = proc keys_down -> do
   position' <- braveDefenderPosition range_box (defender ^. position) -< keys_down
-  returnA                                                             -< BraveDefender { _position = position'
-                                                                                       , _health   = 10       }
+  returnA                                                             -< BraveDefender { BD._position = position'
+                                                                                       , _health      = 10       }
+
+-- | depending on input and spawn point will either fire a bullet or not
+braveDefenderCannon :: SimulationWire (Set G.Key, Point) [Bullet]
+braveDefenderCannon = braveDefenderFireShot . when (member G.Key'X . fst)
+                   <|> pure []
+
+-- | takes the position where a bullet would be fired and keys and fires a bullet if possible
+-- Brave defender is shooting takes care of cooldown
+braveDefenderFireShot :: SimulationWire (Set G.Key, Point) [Bullet]
+braveDefenderFireShot = proc (_, position') ->
+  returnA                 -< [Bullet { B._position  = position'
+                                     , _velocity    = 25.0
+                                     , _direction   = V2 0.0 1.1 }]
+
+-- | if the player is shooting, produce a fire event
+braveDefenderIsShooting :: SimulationWire (Set G.Key) (Event (Set G.Key))
+braveDefenderIsShooting =
+  once . became (member G.Key'X) -->
+  after 0.5 . braveDefenderIsShooting
 
 -- | Represents a brave defenders position
 braveDefenderPosition :: (Point, Point)                   -- ^ box to clamp position to

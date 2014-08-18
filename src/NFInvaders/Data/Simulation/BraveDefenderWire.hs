@@ -3,7 +3,8 @@
 module NFInvaders.Data.Simulation.BraveDefenderWire where
 
 import Data.Set                            (Set)
-import NFInvaders.Data.Actor.BraveDefender (BraveDefender(..))
+import NFInvaders.Data.Actor.BraveDefender (BraveDefender)
+import NFInvaders.Data.Actor.Bullet        (Bullet)
 import NFInvaders.Data.Simulation.GameWire (SimulationWire)
 import Graphics.UI.GLFW                    (Key(..))
 
@@ -11,5 +12,5 @@ import Graphics.UI.GLFW                    (Key(..))
 -- a clock frame of Timed NominalDiffTime
 -- An inhibition value of ()
 -- a monad transformer of Identint ( no monad transformers are used )
--- And it takes a set of keys and returns a BraveDefender
-type BraveDefenderWire = SimulationWire (Set Key) BraveDefender
+-- And it takes a set of keys and returns a BraveDefender and any bullets the defender fired
+type BraveDefenderWire = SimulationWire (Set Key) (BraveDefender, [Bullet])

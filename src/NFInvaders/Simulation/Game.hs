@@ -21,10 +21,10 @@ import Control.Lens                                                        ((^.)
 -- | Gamewire that only simulates invader movement
 gameWire :: GameState -> GameWire
 gameWire game_state = proc keys_down -> do
-  defender'             <- game_state ^. braveDefender                                              -< keys_down
+  (defender', bullets') <- game_state ^. braveDefender                                              -< keys_down
   invaders'             <- automatedWireCollection invaderWire (game_state ^. invaders            ) -< []
   invaderBullets'       <- automatedWireCollection bulletWire  (game_state ^. invaderBullets      ) -< []
-  braveDefenderBullets' <- automatedWireCollection bulletWire  (game_state ^. braveDefenderBullets) -< []
+  braveDefenderBullets' <- automatedWireCollection bulletWire  (game_state ^. braveDefenderBullets) -< bullets'
   returnA -< Game { _invaders             = invaders'
                   , _invaderBullets       = invaderBullets'
                   , _braveDefenderBullets = braveDefenderBullets'
