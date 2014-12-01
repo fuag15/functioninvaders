@@ -31,32 +31,32 @@ import Prelude                         hiding ((.))
 invaderWire :: Invader     -- ^ initial stateo of invader
             -> InvaderWire -- ^ wire type that generates a snapshot of an invader each simulation step
 invaderWire invader = proc _ -> do
-  position' <- invaderPosition (invader ^. position) -< ()
+  position' <- move (invader ^. position) -< ()
   returnA -< Invader { _position = position'
                      , _health   = 10        }
 
 -- | Represents an invaders position
-invaderPosition :: Point                   -- ^ initial position
-                -> SimulationWire () Point -- ^ wire that iterates position
-invaderPosition initial_position =
-  integral initial_position . invaderVelocityCycle 1.0
+move :: Point                   -- ^ initial position
+     -> SimulationWire () Point -- ^ wire that iterates position
+move initial_position =
+  integral initial_position . velocityCycle 1.0
 
 -- | One cycle worth of an invaders velocity
-invaderVelocityCycle :: NominalDiffTime          -- ^ Total time for one cycle
-                     -> SimulationWire () Vector -- ^ Wire that gives a velocity that loops through all directions in the time give
-invaderVelocityCycle duration =
+velocityCycle :: NominalDiffTime          -- ^ Total time for one cycle
+              -> SimulationWire () Vector -- ^ Wire that gives a velocity that loops through all directions in the time give
+velocityCycle duration =
   step (V2 (-1) 0   ) -->       -- step Left
   step (V2 0    (-1)) -->       -- step Down
   step (V2 1    0   ) -->       -- step Up
   step (V2 0    1   ) -->       -- step Right
-  invaderVelocityCycle duration -- repeat
+  velocityCycle duration -- repeat
   where
-    step = invaderTimedVelocityVector (duration / 4) 20
+    step = timedVelocityVector (duration / 4) 20
 
 -- | Wire representing a timed velocity along a set vector
-invaderTimedVelocityVector :: NominalDiffTime          -- ^ The amount of time to maintain this velocity
-                           -> Double                   -- ^ the amount velocity to apply in the direction
-                           -> Vector                   -- ^ The vector representing the directon of velocity
-                           -> SimulationWire () Vector -- ^ This wire takes anything and returns a Vector
-invaderTimedVelocityVector duration magnitude direction =
+timedVelocityVector :: NominalDiffTime          -- ^ The amount of time to maintain this velocity
+                    -> Double                   -- ^ the amount velocity to apply in the direction
+                    -> Vector                   -- ^ The vector representing the directon of velocity
+                    -> SimulationWire () Vector -- ^ This wire takes anything and returns a Vector
+timedVelocityVector duration magnitude direction =
   for duration . pure (direction ^* magnitude)
