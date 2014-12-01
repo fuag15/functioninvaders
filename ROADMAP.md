@@ -2,7 +2,7 @@
 
 - quick documentation pass now that this is up on github
 - initial iterations of wire logic
-- move ugly fixed function prototype to opengl 4.4
+- move ugly fixed function prototype to opengl 4.5
 - document
 - test
 - create webgl backend
